@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body id="body">
+    <h1 id="h1">This is the first heading</h1>
+    <h3 id="h2">This is the 2 nd heading</h3>
+    <button id="btn">Chnange Tesxt</button>
+    <button id="bt2">Chnange Color</button>
+    <Button id="1">Red</Button>
+    <Button id="2">Green</Button>
+    <Button id="3">Pink</Button>
+    <br><br><br>
+
+    <form action="#" id="f1">
+        <input type="text" name="" id="t1" placeholder="Enter Name"> <br><br>
+
+        <input type="text" name="" id="t2" placeholder="Enter Password"> <br><br>
+                <div><Button id="s1">Submit</Button></div>
+        
+    </form>
+
+    <script>
+         let btn = document.getElementById("btn");
+         let b1 = document.getElementById("1");
+         b1.addEventListener("click",()=>{
+            document.getElementById("body").style.backgroundColor="Black"
+         })
+          let b2 = document.getElementById("2");
+         b2.addEventListener("click",()=>{
+            document.getElementById("body").style.backgroundColor="Green"
+         })
+          let b3 = document.getElementById("3");
+         b3.addEventListener("click",()=>{
+            document.getElementById("body").style.backgroundColor="Pink"
+         })
+
+         btn.addEventListener("click",()=>{
+            document.getElementById("h1").innerHTML="Text of h1 cahanged"
+            document.getElementById("h2").innerHTML="Text of h2 cahanged"
+
+         })
+         let bt2 = document.getElementById("bt2");
+
+         bt2.addEventListener("click",()=>{
+            document.getElementById("h1").style.color="Red"
+            document.getElementById("h2").style.color="Blue"
+    
+         })
+
+
+         
+         let f1 = document.getElementById("t1").addEventListener("submit",(event)=>{
+            event.preventDefault()
+
+             let t1 = document.getElementById("t1").value.trim
+
+             if(t1=="")
+             alert("Give value")
+
+          })
+
+    
+
+
+    </script>
+</body>
+</html>
