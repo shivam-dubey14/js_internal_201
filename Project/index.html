@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Role-Based Website</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(to right,#e0f7fa,#fce4ec); }
+
+    /* NAVBAR */
+    .navbar { background: linear-gradient(90deg,#0f2027,#203a43,#2c5364); color:white; padding:15px 30px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; }
+    .nav-left { display:flex; align-items:center; gap:15px; }
+    .nav-left i { color:#ffdd57; }
+    .home-link { color:#ffdd57; text-decoration:none; font-weight:bold; cursor:pointer; }
+    .home-link:hover { text-decoration:underline; }
+    .nav-title { text-align:center; font-size:26px; font-weight:bold; letter-spacing:2px; color:#ffdd57; text-shadow:0 0 10px rgba(255,221,87,0.6); }
+    .nav-right { text-align:right; }
+    .nav-right button { margin-left:10px; padding:8px 16px; border:none; border-radius:20px; cursor:pointer; background:#ffdd57; font-weight:bold; }
+
+    /* SECTIONS */
+    .section { padding:80px 20px; text-align:center; }
+    .hidden { display:none; }
+    .images { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:40px; }
+    .images img { width:260px; height:180px; object-fit:cover; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+
+    .form-box { background:white; width:320px; margin:auto; padding:25px; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.15); }
+    input, select { width:90%; padding:10px; margin:10px 0; border-radius:8px; border:1px solid #ccc; }
+    .form-box button { width:95%; padding:10px; margin-top:10px; border:none; border-radius:20px; background:linear-gradient(90deg,#36d1dc,#5b86e5); color:white; font-size:16px; cursor:pointer; }
+
+    .from-text { margin-top:10px; font-size:14px; color:#555; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="nav-left">
+        <i class="fa-solid fa-star"></i>
+        <a class="home-link" onclick="goHome()">Home</a>
+    </div>
+    <div class="nav-title"> Role-Based Website </div>
+    <div class="nav-right">
+        <button id="loginBtn" onclick="navigate('login','home')">Login</button>
+        <button id="signupBtn" onclick="navigate('signup','home')">Sign Up</button>
+        <button id="logoutBtn" onclick="logout()" class="hidden">Logout</button>
+    </div>
+</div>
+
+<!-- HOME PAGE -->
+<div id="homePage" class="section">
+    <h1>Welcome to the Home Page </h1>
+    <p>Choose Login or Sign Up to continue</p>
+    <div class="images">
+        <img src="https://picsum.photos/400/300?random=1">
+        <img src="https://picsum.photos/400/300?random=2">
+        <img src="https://picsum.photos/400/300?random=3">
+    </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="section hidden">
+    <div class="form-box">
+        <h2><i class="fa-solid fa-user-lock"></i> Login</h2>
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        <select id="loginRole">
+            <option value="customer">Customer</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button onclick="login()">Login</button>
+        <div class="from-text" id="loginFrom"></div>
+    </div>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div id="signupPage" class="section hidden">
+    <div class="form-box">
+        <h2><i class="fa-solid fa-user-plus"></i> Sign Up</h2>
+        <input type="text" placeholder="Username">
+        <input type="email" placeholder="Email">
+        <input type="password" placeholder="Password">
+        <select id="signupRole">
+            <option value="customer">Customer</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button onclick="signup()">Create Account</button>
+        <div class="from-text" id="signupFrom"></div>
+    </div>
+</div>
+
+<!-- SUCCESS PAGE -->
+<div id="successPage" class="section hidden">
+    <h1>🎉 Login Successful!</h1>
+    <p>Redirecting based on role...</p>
+    <div class="from-text" id="successFrom"></div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="adminPage" class="section hidden">
+    <h1>👑 Welcome Admin!</h1>
+    <p>You have full access to the system</p>
+</div>
+
+<!-- CUSTOMER PAGE -->
+<div id="customerPage" class="section hidden">
+    <h1>😊 Welcome Customer!</h1>
+    <p>Enjoy browsing our content</p>
+</div>
+
+<script>
+    function hideAll() {
+        homePage.classList.add("hidden");
+        loginPage.classList.add("hidden");
+        signupPage.classList.add("hidden");
+        successPage.classList.add("hidden");
+        adminPage.classList.add("hidden");
+        customerPage.classList.add("hidden");
+    }
+
+    function goHome() {
+        window.history.pushState({}, "", "index.html");
+        loginBtn.classList.remove("hidden");
+        signupBtn.classList.remove("hidden");
+        logoutBtn.classList.add("hidden");
+        loadFromURL();
+    }
+
+    function navigate(page, from) {
+        window.history.pushState({}, "", `?page=${page}&from=${from}`);
+        loadFromURL();
+    }
+
+    function login() {
+        const role = document.getElementById('loginRole').value;
+        const from = 'login';
+        window.history.pushState({}, "", `?page=success&from=${from}&role=${role}`);
+        loadFromURL();
+    }
+
+    function signup() {
+        const role = document.getElementById('signupRole').value;
+        const from = 'signup';
+        window.history.pushState({}, "", `?page=success&from=${from}&role=${role}`);
+        loadFromURL();
+    }
+
+    function logout() {
+        goHome();
+    }
+
+    function loadFromURL() {
+        hideAll();
+        const params = new URLSearchParams(window.location.search);
+        const page = params.get("page");
+        const from = params.get("from");
+        const role = params.get("role");
+
+        // Show "from" info
+        if(page==='login') loginFrom.innerText = from ? `Navigated from: ${from}` : '';
+        if(page==='signup') signupFrom.innerText = from ? `Navigated from: ${from}` : '';
+        if(page==='success') successFrom.innerText = from ? `Logged in from: ${from}` : '';
+
+        // Page logic
+        if(page==='login') { loginPage.classList.remove("hidden"); }
+        else if(page==='signup') { signupPage.classList.remove("hidden"); }
+        else if(page==='success') {
+            successPage.classList.remove("hidden");
+            loginBtn.classList.add("hidden");
+            signupBtn.classList.add("hidden");
+            logoutBtn.classList.remove("hidden");
+
+            // Redirect based on role after short delay
+            setTimeout(()=>{
+                if(role==='admin') adminPage.classList.remove("hidden");
+                else customerPage.classList.remove("hidden");
+                successPage.classList.add("hidden");
+            }, 1000);
+        }
+        else { homePage.classList.remove("hidden"); }
+    }
+
+    
+    loadFromURL();
+</script>
+</body>
+</html>
