@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Registration</title>
+  <style>
+    * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      background: aquamarine;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background: #ffffff;
+      padding: 24px 28px;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; margin-bottom: 20px; }
+    .field { margin-bottom: 14px; }
+    label { display: block; margin-bottom: 6px; font-weight: bold; }
+    input[type="text"],
+    input[type="email"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .gender-group label { font-weight: normal; display: inline-block; margin-right: 10px; }
+    .terms { display: flex; align-items: center; gap: 8px; }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #2563eb;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover { background: #1e40af; }
+    .error { color: #dc2626; font-size: 14px; margin-top: 4px; }
+    .success { color: #16a34a; font-weight: bold; margin-bottom: 12px; }
+    .output { margin-top: 16px; }
+    /* Success page */
+    .success-page h1 { color: #16a34a; text-align: center; }
+    .success-card {
+      margin-top: 16px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 16px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container"></div>
+
+  <script>
+    const app = document.getElementById('app');
+
+    function renderForm() {
+      app.innerHTML = `
+        <h2>Student Registration</h2>
+        <form id="regForm">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" id="name" />
+            <div class="error" id="nameError"></div>
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input type="email" id="email" />
+            <div class="error" id="emailError"></div>
+          </div>
+
+          <div class="field">
+            <label>Gender</label>
+            <div class="gender-group">
+              <label><input type="radio" name="gender" value="Male" /> Male</label>
+              <label><input type="radio" name="gender" value="Female" /> Female</label>
+            </div>
+            <div class="error" id="genderError"></div>
+          </div>
+
+          <div class="field">
+            <label>Course</label>
+            <select id="course">
+              <option value="">-- Select Course --</option>
+              <option>HTML</option>
+              <option>CSS</option>
+              <option>Java</option>
+              <option>JavaScript</option>
+             
+            </select>
+            <div class="error" id="courseError"></div>
+          </div>
+
+         <div class="field terms">
+           <input type="checkbox" id="terms" />
+ <label for="terms">I agree to Terms & Conditions</label>
+          </div>
+          <div class="error" id="termsError"></div>
+
+          <button type="submit">Register</button>
+        </form>
+      `;
+
+      document.getElementById('regForm').addEventListener('submit', handleSubmit);
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const gender = document.querySelector('input[name="gender"]:checked');
+      const course = document.getElementById('course').value;
+      const terms = document.getElementById('terms').checked;
+
+      let valid = true;
+
+      document.querySelectorAll('.error').forEach(el => el.textContent = '');
+
+      if (!name) {
+        nameError.textContent = ' Name should not be empty';
+        valid = false;
+      }
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailError.textContent = 'Email should be valid';
+        valid = false;
+      }
+
+      if (!gender) {
+        genderError.textContent = ' Gender must be selected';
+        valid = false;
+      }
+
+      if (!course) {
+        courseError.textContent = ' Course must be selected';
+        valid = false;
+      }
+
+      if (!terms) {
+        termsError.textContent = 'Terms checkbox must be checked';
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      const data = {
+        name,
+        email,
+        gender: gender.value,
+        course
+      };
+
+      sessionStorage.setItem('regData', JSON.stringify(data));
+      window.location.hash = '#success';
+      renderSuccess();
+    }
+
+    function renderSuccess() {
+      const data = JSON.parse(sessionStorage.getItem('regData'));
+      if (!data) return renderForm();
+
+      app.classList.add('success-page');
+      app.innerHTML = `
+        <h1>Registration Successful!</h1>
+        <div class="success-card">
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          <p><strong>Gender:</strong> ${data.gender}</p>
+          <p><strong>Course:</strong> ${data.course}</p>
+        </div>
+      `;
+    }
+
+    if (window.location.hash === '#success') {
+      renderSuccess();
+    } else {
+      renderForm();
+    }
+  </script>
+</body>
+</html>
